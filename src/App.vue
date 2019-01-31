@@ -2,9 +2,10 @@
   <div id="app">
     <app-logo></app-logo>
     <div class="container">
-      <app-filters></app-filters>
+      <app-filters @select="filterTickets"></app-filters>
+       <!--   :selected="filters"-->
       <ul>
-        <app-ticket v-for="(ticket, i) in tickets"
+        <app-ticket v-for="(ticket, i) in selectedTickets"
                     v-bind:ticket="ticket"
                     v-bind:key="i"
 
@@ -26,13 +27,35 @@
 export default {
   data() {
    return {
-     tickets: Data.tickets
+     tickets: Data.tickets,
+     //selectedAll:false,
+     filters: []
    }
   },
   components: {
     AppLogo: AppLogo,
     AppFilters: AppFilters,
     AppTicket: AppTicket
+  },
+  computed: {
+    selectedTickets(){
+      if (this.filters.length === 0 ) {
+        return this.tickets;
+      } else {
+        return this.tickets.filter(ticket => this.filters.some(filter => filter == ticket.stops));
+      }
+    }
+  },
+  methods: {
+    filterTickets(val) {
+        if (val == "all") {
+          this.filters = [];
+
+        } else {
+          this.filters.push(val);
+
+        }
+    }
   }
 }
 
