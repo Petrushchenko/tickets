@@ -2,7 +2,7 @@
     <li>
         <div>
             <img src="../images/Logo.svg">
-            <button>Купить за {{ticket.price}} </button>
+            <button>Купить за {{Math.round(+ticket.price / factor)}}  {{ sign }} </button>
         </div>
         <div>
             <div class="time">
@@ -43,9 +43,10 @@
 
     export default {
         props: {
-            ticket: Object
+            ticket: Object,
+            factor: Number,
+            sign: String
         },
-   
     }
     
 </script>
@@ -76,6 +77,7 @@ li {
                 font-weight: 400;
                 border-radius: 5px;
                 border: none;
+                margin-top: 20px;
                 &:hover {
                     cursor: pointer;
                     background-color: $btn-hover-color;

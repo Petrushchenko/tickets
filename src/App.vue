@@ -2,12 +2,18 @@
   <div id="app">
     <app-logo></app-logo>
     <div class="container">
-      <app-filters @select="filterTickets"></app-filters>
-       <!--   :selected="filters"-->
+      <app-filters @select="filterTickets"
+                   @onChangeCurrency = "refreshPrice"
+      >
+        
+      </app-filters>
+
       <ul>
         <app-ticket v-for="(ticket, i) in selectedTickets"
                     v-bind:ticket="ticket"
                     v-bind:key="i"
+                    v-bind:factor = "factor"
+                    v-bind:sign = "currencySign"
 
         >
         </app-ticket>
@@ -28,7 +34,8 @@ export default {
   data() {
    return {
      tickets: Data.tickets,
-     //selectedAll:false,
+     factor: 1,
+     currencySign: "₱",
      filters: []
    }
   },
@@ -48,13 +55,28 @@ export default {
   },
   methods: {
     filterTickets(val) {
+
         if (val == "all") {
           this.filters = [];
-
         } else {
           this.filters.push(val);
 
         }
+    },
+    refreshPrice(str) {
+      switch (str) {
+        case 'usd':
+          this.factor = 100;
+          this.currencySign = "$";
+          break;
+        case 'eur':
+          this.factor = 150;
+          this.currencySign = "€";
+          break;
+        default:
+          this.factor = 1;
+          this.currencySign = "₱"
+      }
     }
   }
 }

@@ -4,6 +4,8 @@
         <div class="buttons">
             <button v-for="(button, index) in buttons"
                     v-bind:key= "index"
+                    :class="{active : currency == button}"
+                    @click = "changeCurrency(button)"
                     >
                {{ button }}
             </button>
@@ -11,8 +13,8 @@
         <p>количество пересадок</p>
         <ul class="transfers">
             <li v-for="transfer in transfers"
-                       v-bind:key="transfer.name">
-                <label 
+                v-bind:key="transfer.name">
+                <label :class="{ checked: transfer.checked}"
                 >
                     <input type="checkbox" 
                            name="transfer.name" 
@@ -24,14 +26,12 @@
                 </label>
             </li>
         </ul>
-       <!--  {{selected}} -->
     </div>
     
 </template>
 
 <script >
     export default {
-     //   props: ['selected'],
         data() {
             return {
                 buttons : ['rub', 'usd', 'eur'],
@@ -61,7 +61,8 @@
                         name : '3',
                         checked: false
                      }
-                ]
+                ],
+                currency: 'rub'
     
             }
         },
@@ -81,24 +82,28 @@
                     });
                 }
                 this.$emit('select', num);
-
+            },
+            changeCurrency(str) {
+                this.currency = str;
+                this.$emit('onChangeCurrency', this.currency);
             }
         }
-
     }
 </script>
 
 <style scoped lang="scss">
 $btn-border-color: #d2d5d6;
 $active-btn-color: #2196f3;
-$btn-hover-color: #DADADA;
+$btn-hover-color:  #f2fcff;
 $text-color:#4A4A4A;
-
+* {
+    box-sizing: border-box;
+}
 .filters {
     font-size: 12px;
     box-shadow: 0px 1px 4px 0px rgba(91,137,164,0.25);
     background-color: white;
-    padding: 20px 15px;
+    padding: 20px 0;
     border-radius: 5px;
     height: max-content;
      p {
@@ -106,13 +111,14 @@ $text-color:#4A4A4A;
         color: $text-color;
         margin: 0;
         text-align: left;
+        margin: 0 15px;
     }
 
 }
     .buttons {
         display: flex;
-        margin: 15px 0;
-        width: 100%;
+        margin: 15px 15px;
+        width: inherit;
         button {
             width: 33.3%;
             background-color: white;
@@ -122,23 +128,28 @@ $text-color:#4A4A4A;
             height:  40px;
             color: $active-btn-color;
             text-transform:uppercase;
-            &:not(:last-child) {
-                border-right-width: 0 ;
-            }
+            position: relative;
             &:first-child {
                 border-radius: 5px 0 0 5px;
+                left: 1px;
             }
             &:last-child {
                 border-radius: 0 5px 5px 0;
+                right: 1px;
             }
             &:hover {
                 cursor: pointer;
                 background-color: $btn-hover-color;
+                border-color: $active-btn-color;
+                z-index: 3;
             }
-            &.avtive {
+            &.active {
                 background-color: $active-btn-color;
                 border-color: $active-btn-color;
+                color: white;
+                z-index: 3;            
             }
+           
         }
     }
    
@@ -146,6 +157,66 @@ $text-color:#4A4A4A;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        margin: 0;
+        padding: 0;
+        li {
+            height: 36px;
+            width: 100%;
+            padding: 0 15px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+            input {
+                display: none;
+
+            }
+            &::after {
+                content: "только";
+                position: absolute;
+                right: 15px;
+                text-transform: uppercase;
+                color: $active-btn-color;
+                display: none;
+            }
+            &:hover {
+                background-color: $btn-hover-color;
+                label {
+                    &::after {
+                        border-color: $active-btn-color;
+                    }
+                }
+                &::after {
+                    display: block;
+                }
+            }
+            label {
+                position: relative;
+                padding-left: 25px; 
+                color: #4a4a4a;
+                font-size: 13px;
+                &::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    top: 50%;
+                    width: 19px;
+                    height: 19px;
+                    border: 1px solid #d2d5d6;
+                    border-radius: 3px;
+                    transform: translateY(-50%);
+                }
+                &.checked {     
+                    &::after {
+                    border-color: $active-btn-color;
+                    content: "\2713";
+                    color: $active-btn-color;
+                    }
+                    
+                }
+
+            }
+        }
 
     }
 
