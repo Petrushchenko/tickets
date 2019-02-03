@@ -60,20 +60,154 @@
       </filter>
       </defs>
     </svg>
-
+    <button class="burger" type="button" v-if="show" @click="showMenu">
+            <span></span>
+            <span></span>
+            <span></span>
+    </button>
+    <button class="cross" type="button" v-else @click="hideMenu">
+            <span></span>
+            <span></span>
+    </button>
+    <transition name='fade'>
+    <app-filters v-if="mobile&&!show" 
+                 class="mobile"
+                 @select="emitFilterTickets"
+                 @onChangeCurrency = "refreshPrice"
+    ></app-filters>
+  </transition>
   </div>
 </template>
 
 <script>
+ import AppFilters from './Filters.vue';
+
 export default {
-  
+  props: ['mobile'],
+  data() {
+    return {
+      show: true
+    }
+  },
+  components: {
+    AppFilters: AppFilters,
+  },
+  methods: {
+    showMenu() {
+      this.show = !this.show;
+      this.$emit('onOpenMenu');
+    },
+    hideMenu() {
+      this.show = !this.show;
+      this.$emit('onCloseMenu');
+    },
+    emitFilterTickets(num) {
+      this.$emit('select', num);
+    },
+    refreshPrice(currency) {
+      this.$emit('onChangeCurrency', currency);
+    }
+  }
   
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="scss">
   .logo {
     text-align: center;
+    position: relative;
+    svg {
+      position: relative;
+      z-index: 5;
+    }
+  }
+  .burger, .cross {
+    display: none;
+  }
+
+  .mobile {
+    position: absolute;
+    width: calc(80% - 30px);
+    top:0;
+    left:50%;
+    transform: translateX(-50%) ;
+    z-index: 2;
+
+  }
+  @media (max-width: 480px){
+    %btn {
+      box-sizing: border-box;
+      width: 40px;
+      background-color: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: space-around;
+      appearance: none;
+      -webkit-appearance: none;
+      padding: 4px;
+      margin: 0;
+      border: 1px solid transparent;
+      outline: none;
+      position: relative;
+      z-index: 5;
+      &:hover {
+        cursor: pointer;
+        border: 1px solid #2196f3;
+        border-radius: 2px;
+      }
+    }
+    %span {
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      margin: 2px auto;
+      background-color: #2196f3;
+    }
+    .logo{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px;
+    }
+    .burger {
+      @extend %btn;
+      span {
+        @extend %span;
+      }
+    }
+    .cross {
+     @extend %btn;
+      position: relative;
+      height: 34px;
+      padding: 4px 0;
+      z-index: 5;
+       span {
+        @extend %span;
+        position: absolute;
+        top: 50%;
+        transform-origin: center center;
+        transform: translateY(-100%);
+        margin: 2px 4px;
+        width: calc(100% - 8px);
+        &:first-child {
+          transform:  translateY( -4px) rotate(45deg);
+        }
+        &:last-child {
+          transform: translateY( -4px) rotate(-45deg);
+
+        }
+      }
+    }
+  }
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.3s ease, transform 0.3s;
+  }
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+    transform: translate(-50%, -20%);
   }
 </style>

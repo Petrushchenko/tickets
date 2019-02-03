@@ -1,9 +1,16 @@
 <template>
   <div id="app">
-    <app-logo></app-logo>
+    <app-logo @onOpenMenu="showMenu = !showMenu"
+              @onCloseMenu='showMenu = !showMenu'
+              @select="filterTickets"
+              @onChangeCurrency = "refreshPrice"
+              :mobile="isMobile"
+    ></app-logo>
     <div class="container">
       <app-filters @select="filterTickets"
                    @onChangeCurrency = "refreshPrice"
+                   v-if="!isMobile"
+
       >
         
       </app-filters>
@@ -30,19 +37,35 @@
   import AppTicket from './components/Ticket.vue';
   import Data from './tickets.json';
 
+
 export default {
   data() {
    return {
      tickets: Data.tickets,
      factor: 1,
      currencySign: "₱",
-     filters: []
+     filters: [],
+     showMenu: false,
+     isMobile: false
    }
   },
   components: {
     AppLogo: AppLogo,
     AppFilters: AppFilters,
     AppTicket: AppTicket
+  },
+
+   mounted() {
+    this.$nextTick(function() {
+      window.addEventListener('resize', this.getWindowWidth);
+
+      //Init
+      this.getWindowWidth()
+    })
+
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.getWindowWidth);
   },
   computed: {
     selectedTickets(){
@@ -51,7 +74,7 @@ export default {
       } else {
         return this.tickets.filter(ticket => this.filters.some(filter => filter == ticket.stops));
       }
-    }
+    }  
   },
   methods: {
     filterTickets(val) {
@@ -60,7 +83,6 @@ export default {
           this.filters = [];
         } else {
           this.filters.push(val);
-
         }
     },
     refreshPrice(str) {
@@ -77,10 +99,13 @@ export default {
           this.factor = 1;
           this.currencySign = "₱"
       }
+    },
+    getWindowWidth(){
+      window.innerWidth < 480 ? this.isMobile = true : this.isMobile = false;
     }
+
   }
 }
-
 </script>
 
 <style lang="scss">
@@ -97,7 +122,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   background-color: #F3F7FA;
-  width: 1024px;
+  max-width: 1024px;
   margin: 0 auto;
   padding: 50px 100px 100px;
   .container {
@@ -111,5 +136,28 @@ body {
     }
   }
 }
-  
+@media (max-width: 950px) {
+  #app {
+    padding: 30px 60px 60px
+  }
+}
+@media (max-width: 790px) {
+  #app {
+    padding:15px 30px 30px
+  }
+}
+@media (max-width: 690px) {
+  #app {
+    .logo {
+      svg {
+        width: 55px;
+        height:60px;
+      }
+    }
+      padding:0 15px 15px;
+      .container {
+        display: block;
+      }
+  }
+}
 </style>

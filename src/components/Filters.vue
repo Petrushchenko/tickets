@@ -1,5 +1,5 @@
 <template>
-    <div class="filters">
+    <div class='filters'>
         <p>валюта</p>
         <div class="buttons">
             <button v-for="(button, index) in buttons"
@@ -32,6 +32,7 @@
 
 <script >
     export default {
+       
         data() {
             return {
                 buttons : ['rub', 'usd', 'eur'],
@@ -87,7 +88,7 @@
                 this.currency = str;
                 this.$emit('onChangeCurrency', this.currency);
             }
-        }
+        },
     }
 </script>
 
@@ -99,6 +100,7 @@ $text-color:#4A4A4A;
 * {
     box-sizing: border-box;
 }
+
 .filters {
     font-size: 12px;
     box-shadow: 0px 1px 4px 0px rgba(91,137,164,0.25);
@@ -169,7 +171,6 @@ $text-color:#4A4A4A;
             position: relative;
             input {
                 display: none;
-
             }
             &::after {
                 content: "только";
@@ -219,5 +220,78 @@ $text-color:#4A4A4A;
         }
 
     }
+@media (max-width: 790px) {
+    .filters {
+        font-size: 10px;
+        font-weight: 700;
+    }
+    .transfers {
+        li {
+            label {
+                font-size: 11px;
+                font-weight: 500;
+
+            }
+        }
+    }
+}
+@media (max-width: 690px) {
+    .filters{
+        margin-bottom: 10px;
+        padding: 10px 0;
+
+    }
+    .transfers {
+        flex-direction: row;
+        margin-top: 10px;
+        li {
+            display: inline-flex;
+            align-items: flex-end;
+            label {
+                padding-bottom: 8px;
+                height: 100%;
+                display: flex;
+                align-items: flex-end;
+            }
+            &::after {
+                font-size: 8px;
+                position: absolute;
+                right: 0;
+                top: 0;
+                text-transform: uppercase;
+                color: $active-btn-color;
+                display: none;
+            }
+        }
+    }
+}
+@media (max-width: 558px) {
+     .transfers {
+        flex-direction: row;
+        margin-top: 10px;
+        li {
+            padding: 0 8px;
+            width: max-content;
+            label {
+                &::after {
+                    width: 16px;
+                    height: 16px;
+                }
+            }
+           
+        }
+    }
+}
+@media (max-width: 480px) {
+    .transfers {
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 0;
+        padding: 0;
+        li {
+            width: 100%;
+        }
+    }
+}
 
 </style>
