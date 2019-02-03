@@ -1,4 +1,4 @@
-# smartlime
+
 
 ## Project setup
 ```
