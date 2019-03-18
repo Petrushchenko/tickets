@@ -1,4 +1,4 @@
-## You can see the page 
+## You can see the page on
 [link](https://petrushchenko.github.io/tickets/)
 
 
