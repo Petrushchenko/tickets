@@ -82,8 +82,9 @@ export default {
         if (val == "all") {
           this.filters = [];
         } else {
-          this.filters.push(val);
+          this.filters.includes(val) ?  this.filters = this.filters.filter( item => item !== val)  : this.filters.push(val);
         }
+
     },
     refreshPrice(str) {
       switch (str) {
