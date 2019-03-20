@@ -89,6 +89,7 @@
                 this.$emit('onChangeCurrency', this.currency);
             }
         },
+
     }
 </script>
 
