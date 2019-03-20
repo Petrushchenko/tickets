@@ -20,3 +20,6 @@ yarn-error.log*
 *.sln
 *.sw*
 *.sketch
+
+#config file
+vue.config.js
